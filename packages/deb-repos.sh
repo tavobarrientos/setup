@@ -13,10 +13,16 @@ SOURCES_DIR=/etc/apt/sources.list.d
 sudo install -d -m 0755 "$KEYRING_DIR"
 
 # --- Microsoft (covers VS Code, Edge, Teams, Azure CLI, Functions Core Tools, .NET) ---
-if [ ! -f "$KEYRING_DIR/microsoft.gpg" ]; then
+# Regenerate if missing OR zero-byte: a failed first run can leave an empty
+# keyring that a plain [ ! -f ] guard would never replace. [ ! -s ] is true
+# when the file is missing or empty.
+if [ ! -s "$KEYRING_DIR/microsoft.gpg" ]; then
   curl -fsSL https://packages.microsoft.com/keys/microsoft.asc \
     | sudo gpg --dearmor -o "$KEYRING_DIR/microsoft.gpg"
 fi
+# apt updates run as the unprivileged _apt user and must be able to read the
+# keyring, otherwise: "repository ... is not signed / can't be done securely".
+sudo chmod a+r "$KEYRING_DIR/microsoft.gpg"
 
 # VS Code
 echo "deb [arch=$ARCH signed-by=$KEYRING_DIR/microsoft.gpg] https://packages.microsoft.com/repos/code stable main" \
