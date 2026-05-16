@@ -74,7 +74,7 @@ ensure_chezmoi() {
 
 run_chezmoi() {
   log "Running chezmoi init --apply $REPO (is_wsl=$is_wsl)"
-  chezmoi init --apply --prompt-bool is_wsl="$is_wsl" "$REPO"
+  chezmoi init --apply --promptBool is_wsl="$is_wsl" "$REPO"
 }
 
 main() {

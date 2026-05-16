@@ -112,7 +112,7 @@ function Ensure-WSL {
 
 function Invoke-Chezmoi {
   Write-Step "Running chezmoi init --apply $Repo"
-  chezmoi init --apply --prompt-bool is_wsl=false $Repo
+  chezmoi init --apply --promptBool is_wsl=false $Repo
 }
 
 function Main {
