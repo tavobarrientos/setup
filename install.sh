@@ -53,7 +53,9 @@ ensure_homebrew() {
 
 ensure_apt_basics() {
   log "Refreshing apt and installing base packages"
-  sudo apt-get update -y
+  # Drop a stale azure-cli source from a prior run; deb-repos.sh recreates it.
+  sudo rm -f /etc/apt/sources.list.d/azure-cli.list
+  sudo apt-get update -y || warn "apt-get update had errors; continuing."
   sudo apt-get install -y curl git ca-certificates gnupg lsb-release
 }
 
