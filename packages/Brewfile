@@ -1,0 +1,68 @@
+# Brewfile — macOS package manifest.
+# Apply with: brew bundle --file=packages/Brewfile
+
+tap "homebrew/bundle"
+tap "homebrew/cask"
+tap "homebrew/cask-fonts"
+tap "azure/functions", "https://github.com/Azure/azure-functions-core-tools"
+tap "sst/tap"
+tap "romkatv/powerlevel10k"
+
+# Core CLI
+brew "git"
+brew "gh"
+brew "fzf"
+brew "ripgrep"
+brew "fd"
+brew "bat"
+brew "eza"
+brew "jq"
+brew "zoxide"
+brew "neovim"
+brew "tmux"          # macOS only — Ubuntu/WSL install tmux via snap; Windows skips it
+brew "uv"
+brew "fnm"
+brew "mas"
+
+# TUI apps
+brew "lazygit"
+brew "yazi"
+
+# Shell prompt (Mac/Linux/WSL use Oh My Zsh + Powerlevel10k; Linux/WSL clone via git instead)
+brew "romkatv/powerlevel10k/powerlevel10k"
+
+# Yazi optional extended tools
+brew "ffmpeg"
+brew "sevenzip"
+brew "poppler"
+brew "imagemagick"
+
+# Cloud / agent CLIs
+brew "azure-cli"
+brew "azure/functions/azure-functions-core-tools@4"
+brew "github/copilot/copilot"
+brew "sst/tap/opencode"
+
+# GUI dev apps
+cask "visual-studio-code"
+cask "cursor"
+cask "claude"
+cask "docker-desktop"
+cask "ghostty"
+cask "postman"
+cask "rider"
+
+# Productivity
+cask "microsoft-edge"
+cask "microsoft-teams"
+cask "microsoft-office"
+cask "slack"
+cask "spotify"
+cask "notion"
+cask "lastpass"
+
+# Fonts
+cask "font-meslo-lg-nerd-font"
+
+# Mac App Store apps
+mas "Xcode", id: 497799835

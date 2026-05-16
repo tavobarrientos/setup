@@ -1,0 +1,8 @@
+# Snap packages. Installed one-by-one because flags differ.
+# Default: installed on Ubuntu desktop AND inside WSL.
+# Tag a line with "# !wsl" to skip it in WSL (e.g., GUI-only apps).
+tmux             --classic
+slack            --classic   # !wsl
+spotify                      # !wsl
+postman                      # !wsl
+notion-snap-reloaded         # !wsl

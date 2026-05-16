@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+{{- if ne .chezmoi.os "darwin" }}
+exit 0
+{{- end }}
+
+set -euo pipefail
+log() { printf '\033[1;34m==>\033[0m %s\n' "$*"; }
+
+log "Applying minimal macOS defaults"
+
+# Finder: show hidden files + path bar + status bar
+defaults write com.apple.finder AppleShowAllFiles -bool true
+defaults write com.apple.finder ShowPathbar       -bool true
+defaults write com.apple.finder ShowStatusBar     -bool true
+
+# Screenshots: save to ~/Pictures/Screenshots as PNG
+mkdir -p "$HOME/Pictures/Screenshots"
+defaults write com.apple.screencapture location -string "$HOME/Pictures/Screenshots"
+defaults write com.apple.screencapture type -string "png"
+
+# Dock: autohide + faster animation, no recent apps
+defaults write com.apple.dock autohide       -bool true
+defaults write com.apple.dock autohide-delay -float 0
+defaults write com.apple.dock show-recents   -bool false
+
+# Keyboard: fast key repeat
+defaults write NSGlobalDomain KeyRepeat        -int 2
+defaults write NSGlobalDomain InitialKeyRepeat -int 15
+defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
+
+# Trackpad: tap to click
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+
+# Restart affected apps so changes take hold (best-effort)
+killall Finder Dock SystemUIServer 2>/dev/null || true
+
+# Remove pre-installed iWork apps (replaced by Microsoft 365)
+for app in Pages Numbers Keynote; do
+  if [ -d "/Applications/${app}.app" ]; then
+    log "Removing /Applications/${app}.app"
+    sudo rm -rf "/Applications/${app}.app"
+  fi
+done
+
+log "macOS defaults applied. Log out + log back in for all settings to fully take effect."

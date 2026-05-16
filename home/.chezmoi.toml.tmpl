@@ -1,0 +1,13 @@
+{{- $name  := promptStringOnce . "name"  "Full name for git commits" "Gustavo Barrientos" -}}
+{{- $email := promptStringOnce . "email" "Email for git commits"     "gustavo.barrientos@ambystech.com" -}}
+{{- $isWsl := promptBoolOnce   . "is_wsl" "Running inside WSL?" false -}}
+
+[data]
+    name   = {{ $name  | quote }}
+    email  = {{ $email | quote }}
+    is_wsl = {{ $isWsl }}
+
+# Run .ps1 scripts under PowerShell 7 (pwsh), not the bundled 5.1 (powershell.exe).
+[interpreters.ps1]
+    command = "pwsh"
+    args    = ["-NoLogo", "-NoProfile"]

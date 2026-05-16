@@ -1,0 +1,41 @@
+# Global gitignore — applies to every repo.
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+*~
+.directory
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+.nvimlog
+
+# Node
+node_modules/
+.npm/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.uv/
+
+# .NET
+bin/
+obj/
+
+# Misc
+.env
+.env.local
+*.log

@@ -1,0 +1,50 @@
+{{ if eq .chezmoi.os "windows" -}}
+# pwsh-modules.txt hash: {{ include "../packages/pwsh-modules.txt" | sha256sum }}
+
+$ErrorActionPreference = 'Continue'
+$repoRoot   = (Split-Path -Parent $env:CHEZMOI_SOURCE_DIR)
+$moduleList = Join-Path $repoRoot 'packages\pwsh-modules.txt'
+
+if (-not (Test-Path $moduleList)) {
+  Write-Warning "pwsh-modules.txt not found at $moduleList"
+  exit 0
+}
+
+# Trust PSGallery so Install-Module doesn't prompt
+$gallery = Get-PSRepository -Name PSGallery -ErrorAction SilentlyContinue
+if ($gallery -and $gallery.InstallationPolicy -ne 'Trusted') {
+  Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+}
+
+# Ensure NuGet provider is present (required by PowerShellGet)
+if (-not (Get-PackageProvider -Name NuGet -ErrorAction SilentlyContinue)) {
+  Install-PackageProvider -Name NuGet -Force -Scope CurrentUser | Out-Null
+}
+
+$modules = Get-Content $moduleList |
+  ForEach-Object { ($_ -split '#',2)[0].Trim() } |
+  Where-Object { $_ }
+
+foreach ($module in $modules) {
+  $installed = Get-Module -ListAvailable -Name $module | Select-Object -First 1
+  $latest    = Find-Module -Name $module -Repository PSGallery -ErrorAction SilentlyContinue
+
+  if ($installed -and $latest -and $installed.Version -ge $latest.Version) {
+    Write-Host "==> $module $($installed.Version) already up to date" -ForegroundColor DarkGray
+    continue
+  }
+
+  Write-Host "==> Installing $module from PSGallery" -ForegroundColor Cyan
+  try {
+    Install-Module -Name $module `
+                   -Scope CurrentUser `
+                   -Repository PSGallery `
+                   -Force `
+                   -AllowClobber `
+                   -AcceptLicense `
+                   -ErrorAction Stop
+  } catch {
+    Write-Warning "Failed to install ${module}: $($_.Exception.Message)"
+  }
+}
+{{- end }}

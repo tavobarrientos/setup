@@ -1,0 +1,36 @@
+# OS metadata
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.directory
+.Trash-*
+*~
+
+# Editors / IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*.sublime-workspace
+*.sublime-project
+
+# chezmoi working state (lives outside the repo, but ignore if anyone copies it in)
+.chezmoiscripts.lock
+
+# Secrets / local-only — secrets are explicitly out of scope for this repo
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+id_rsa
+id_ed25519
+
+# Build / log noise
+*.log
+*.tmp
+*.bak

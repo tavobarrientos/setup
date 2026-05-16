@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+{{- if eq .chezmoi.os "windows" }}
+exit 0
+{{- end }}
+{{- if .is_wsl }}
+# WSL renders fonts via the Windows host.
+exit 0
+{{- end }}
+{{- if eq .chezmoi.os "darwin" }}
+# macOS gets the font from Brewfile cask font-meslo-lg-nerd-font.
+exit 0
+{{- end }}
+
+# Ubuntu: download Meslo Nerd Font from the nerd-fonts release.
+set -euo pipefail
+log() { printf '\033[1;34m==>\033[0m %s\n' "$*"; }
+
+FONT_DIR="$HOME/.local/share/fonts"
+TARGET_GLYPH="$FONT_DIR/MesloLGMNerdFont-Regular.ttf"
+
+if [ -f "$TARGET_GLYPH" ]; then
+  log "MesloLGM Nerd Font already installed"
+  exit 0
+fi
+
+log "Downloading Meslo Nerd Font"
+mkdir -p "$FONT_DIR"
+TMP=$(mktemp -d)
+trap 'rm -rf "$TMP"' EXIT
+curl -fsSL -o "$TMP/Meslo.zip" \
+  https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Meslo.zip
+unzip -q -o "$TMP/Meslo.zip" -d "$TMP/extracted"
+cp "$TMP/extracted/"MesloLGM*NerdFont*.ttf "$FONT_DIR/" 2>/dev/null || \
+  cp "$TMP/extracted/"*.ttf "$FONT_DIR/"
+fc-cache -f "$FONT_DIR"
+log "Meslo Nerd Font installed"

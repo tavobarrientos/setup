@@ -1,0 +1,50 @@
+# Ubuntu apt packages — installed via: xargs -a apt.txt sudo apt-get install -y
+# Repos that need to be added first live in deb-repos.sh.
+
+# Core CLI
+git
+gh
+fzf
+ripgrep
+fd-find
+bat
+jq
+zoxide
+neovim
+zsh
+curl
+ca-certificates
+gnupg
+lsb-release
+unzip
+
+# TUI apps + yazi optional extended tools
+lazygit
+yazi
+ffmpeg
+p7zip-full
+poppler-utils
+imagemagick
+
+# Languages / runtimes prereqs
+build-essential
+
+# Docker
+docker.io
+docker-compose-plugin
+
+# LastPass CLI
+lastpass-cli
+
+# Cloud / agent CLIs (Azure CLI is added via deb-repos.sh script)
+azure-cli
+azure-functions-core-tools-4
+
+# GUI dev apps (require MS / VSCode / etc. repos from deb-repos.sh)
+code
+microsoft-edge-stable
+teams
+ghostty
+
+# Office
+openoffice.org

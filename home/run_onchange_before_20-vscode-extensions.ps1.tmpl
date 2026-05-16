@@ -1,0 +1,20 @@
+{{ if eq .chezmoi.os "windows" -}}
+# extension list hash: {{ include "../packages/vscode-extensions.txt.tmpl" | sha256sum }}
+
+$repoRoot = (Split-Path -Parent $env:CHEZMOI_SOURCE_DIR)
+$extFile  = Join-Path $repoRoot 'packages\vscode-extensions.txt.tmpl'
+
+$code = (Get-Command code -ErrorAction SilentlyContinue)
+if (-not $code) {
+  Write-Host "code CLI not found on PATH; skipping VS Code extensions."
+  exit 0
+}
+
+$rendered = chezmoi execute-template (Get-Content -Raw $extFile)
+$rendered -split "`r?`n" |
+  Where-Object { $_ -and ($_ -notmatch '^\s*#') } |
+  ForEach-Object {
+    Write-Host "==> code --install-extension $_"
+    code --install-extension $_ --force
+  }
+{{- end }}

@@ -1,0 +1,31 @@
+{{ if eq .chezmoi.os "windows" -}}
+# .NET 10 SDK, fnm, uv come from winget (see install.ps1).
+# OpenSpec needs npm (provided by fnm), so install it here once fnm is on PATH.
+
+function Test-Command($name) { return [bool](Get-Command $name -ErrorAction SilentlyContinue) }
+
+if (Test-Command fnm) {
+  Write-Host "==> Installing Node LTS via fnm" -ForegroundColor Cyan
+  fnm install --lts
+  fnm default $(fnm current)
+  fnm env --use-on-cd --shell powershell | Out-String | Invoke-Expression
+}
+
+if (Test-Command uv) {
+  Write-Host "==> Installing Python 3.12 via uv" -ForegroundColor Cyan
+  uv python install 3.12
+  uv python pin 3.12 --global 2>$null
+}
+
+if (Test-Command npm) {
+  Write-Host "==> Installing OpenSpec via npm" -ForegroundColor Cyan
+  npm install -g '@fission-ai/openspec@latest'
+} else {
+  Write-Host "npm not yet on PATH; open a new PowerShell and re-run 'chezmoi apply'." -ForegroundColor Yellow
+}
+
+if (-not (Test-Command claude)) {
+  Write-Host "==> Installing Claude Code CLI" -ForegroundColor Cyan
+  irm https://claude.ai/install.ps1 | iex
+}
+{{- end }}

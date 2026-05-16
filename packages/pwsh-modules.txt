@@ -1,0 +1,7 @@
+# PowerShell modules installed from the PSGallery on Windows.
+# One name per line. Blank lines and # comments ignored.
+# Installed with: Install-Module -Scope CurrentUser -Force -AcceptLicense
+
+PSReadLine
+Terminal-Icons
+CompletionPredictor

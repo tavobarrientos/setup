@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# extension list hash: {{ include "../packages/vscode-extensions.txt.tmpl" | sha256sum }}
+
+{{- if eq .chezmoi.os "windows" }}
+exit 0
+{{- end }}
+{{- if .is_wsl }}
+# Inside WSL, VS Code is provided by the Windows host via Remote-WSL.
+# Extensions installed there cover both environments.
+exit 0
+{{- end }}
+
+set -euo pipefail
+REPO_DIR="${CHEZMOI_SOURCE_DIR%/home}"
+EXT_FILE="$REPO_DIR/packages/vscode-extensions.txt.tmpl"
+
+if ! command -v code >/dev/null 2>&1; then
+  echo "code CLI not found on PATH; skipping VS Code extensions."
+  exit 0
+fi
+
+# Re-render via chezmoi (paths inside the tmpl already account for OS gating)
+RENDERED=$(chezmoi execute-template < "$EXT_FILE")
+
+echo "$RENDERED" | while IFS= read -r line; do
+  case "$line" in ''|\#*) continue ;; esac
+  echo "==> code --install-extension $line"
+  code --install-extension "$line" --force || true
+done

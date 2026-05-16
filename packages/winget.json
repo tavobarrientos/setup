@@ -1,0 +1,53 @@
+{
+  "$schema": "https://aka.ms/winget-packages.schema.2.0.json",
+  "CreationDate": "2026-05-15",
+  "Sources": [
+    {
+      "Packages": [
+        { "PackageIdentifier": "Git.Git" },
+        { "PackageIdentifier": "GitHub.cli" },
+        { "PackageIdentifier": "twpayne.chezmoi" },
+        { "PackageIdentifier": "JanDeDobbeleer.OhMyPosh" },
+
+        { "PackageIdentifier": "Microsoft.VisualStudioCode" },
+        { "PackageIdentifier": "Anysphere.Cursor" },
+        { "PackageIdentifier": "Anthropic.Claude" },
+        { "PackageIdentifier": "Microsoft.VisualStudio.2026.Community" },
+        { "PackageIdentifier": "Microsoft.PowerToys" },
+
+        { "PackageIdentifier": "Docker.DockerDesktop" },
+        { "PackageIdentifier": "Postman.Postman" },
+
+        { "PackageIdentifier": "Microsoft.Office" },
+        { "PackageIdentifier": "Microsoft.Edge" },
+        { "PackageIdentifier": "Microsoft.Teams" },
+        { "PackageIdentifier": "SlackTechnologies.Slack" },
+        { "PackageIdentifier": "Spotify.Spotify" },
+        { "PackageIdentifier": "Notion.Notion" },
+        { "PackageIdentifier": "LogMeIn.LastPass" },
+
+        { "PackageIdentifier": "Microsoft.DotNet.SDK.10" },
+        { "PackageIdentifier": "Schniz.fnm" },
+        { "PackageIdentifier": "astral-sh.uv" },
+
+        { "PackageIdentifier": "Microsoft.AzureCLI" },
+        { "PackageIdentifier": "Microsoft.Azure.FunctionsCoreTools" },
+        { "PackageIdentifier": "GitHub.CLI.Copilot" },
+        { "PackageIdentifier": "sst-cli.opencode" },
+
+        { "PackageIdentifier": "JesseDuffield.Lazygit" },
+        { "PackageIdentifier": "sxyazi.yazi" },
+        { "PackageIdentifier": "ImageMagick.ImageMagick" },
+        { "PackageIdentifier": "7zip.7zip" },
+        { "PackageIdentifier": "Gyan.FFmpeg" }
+      ],
+      "SourceDetails": {
+        "Argument": "https://cdn.winget.microsoft.com/cache",
+        "Identifier": "Microsoft.Winget.Source_8wekyb3d8bbwe",
+        "Name": "winget",
+        "Type": "Microsoft.PreIndexed.Package"
+      }
+    }
+  ],
+  "WinGetVersion": "1.7.0"
+}

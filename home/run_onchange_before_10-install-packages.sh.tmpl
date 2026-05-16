@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+# Hashes of package files so chezmoi re-runs this when they change:
+#   Brewfile:        {{ include "../packages/Brewfile" | sha256sum }}
+#   apt.txt:         {{ include "../packages/apt.txt" | sha256sum }}
+#   snap.txt:        {{ include "../packages/snap.txt" | sha256sum }}
+#   wsl-packages:    {{ include "../packages/wsl-packages.txt" | sha256sum }}
+#   deb-repos.sh:    {{ include "../packages/deb-repos.sh" | sha256sum }}
+
+{{- if eq .chezmoi.os "windows" }}
+exit 0
+{{- end }}
+
+set -euo pipefail
+REPO_DIR="${CHEZMOI_SOURCE_DIR%/home}"
+PKG_DIR="$REPO_DIR/packages"
+
+log() { printf '\033[1;34m==>\033[0m %s\n' "$*"; }
+
+{{ if eq .chezmoi.os "darwin" -}}
+log "macOS: brew bundle"
+brew update
+brew bundle --file="$PKG_DIR/Brewfile" || {
+  log "Brew bundle had errors (mas Xcode may fail if not signed into App Store); continuing."
+}
+
+{{ else if eq .chezmoi.os "linux" -}}
+  {{ if .is_wsl -}}
+log "WSL: installing CLI-only apt package set"
+sudo apt-get update -y
+grep -v '^\s*#' "$PKG_DIR/wsl-packages.txt" | grep -v '^\s*$' \
+  | xargs sudo apt-get install -y --no-install-recommends \
+  || log "Some WSL packages failed to install; check apt output above."
+
+# Add Microsoft + GitHub apt repos (no GUI repos in WSL)
+if ! [ -f /etc/apt/keyrings/microsoft.gpg ]; then
+  sudo install -d -m 0755 /etc/apt/keyrings
+  curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | sudo gpg --dearmor -o /etc/apt/keyrings/microsoft.gpg
+fi
+UBUNTU_VER=$(lsb_release -rs)
+curl -fsSL "https://packages.microsoft.com/config/ubuntu/${UBUNTU_VER}/packages-microsoft-prod.deb" -o /tmp/ms-prod.deb
+sudo dpkg -i /tmp/ms-prod.deb || true
+rm -f /tmp/ms-prod.deb
+sudo apt-get update -y
+sudo apt-get install -y azure-cli azure-functions-core-tools-4 || \
+  log "Azure CLI / Functions Core Tools install failed; install manually if needed."
+
+# Snap inside WSL: requires systemd to be enabled in /etc/wsl.conf.
+# If systemd isn't running, snap installs will fail loudly — that's OK,
+# the rest of the bootstrap continues.
+if ! command -v snap >/dev/null 2>&1; then
+  log "Installing snapd for WSL (requires systemd; enable in /etc/wsl.conf if missing)"
+  sudo apt-get install -y snapd || log "snapd install failed."
+fi
+
+if command -v snap >/dev/null 2>&1 && systemctl is-system-running >/dev/null 2>&1; then
+  log "Installing WSL-compatible snaps (everything not tagged '# !wsl')"
+  while IFS= read -r line; do
+    case "$line" in *"# !wsl"*) continue ;; esac   # skip GUI-only snaps
+    line="${line%%#*}"
+    line=$(echo "$line" | xargs)
+    [ -z "$line" ] && continue
+    # shellcheck disable=SC2086
+    sudo snap install $line || log "Snap install failed: $line"
+  done < "$PKG_DIR/snap.txt"
+else
+  log "snap unavailable inside this WSL distro (systemd off?); skipping snap installs."
+fi
+
+  {{ else -}}
+log "Ubuntu: adding third-party apt repos"
+bash "$PKG_DIR/deb-repos.sh"
+
+log "Ubuntu: apt install from apt.txt"
+# Filter out comments and blank lines, install in one shot
+grep -v '^\s*#' "$PKG_DIR/apt.txt" | grep -v '^\s*$' \
+  | xargs sudo apt-get install -y --no-install-recommends \
+  || log "Some apt packages failed; review the output above."
+
+log "Ubuntu: snap installs"
+while IFS= read -r line; do
+  line="${line%%#*}"            # strip trailing comments
+  line=$(echo "$line" | xargs)  # trim whitespace
+  [ -z "$line" ] && continue
+  # shellcheck disable=SC2086
+  sudo snap install $line || log "Snap install failed: $line"
+done < "$PKG_DIR/snap.txt"
+  {{ end -}}
+{{ end }}
+
+log "Package install step complete."

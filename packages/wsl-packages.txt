@@ -1,0 +1,40 @@
+# WSL — CLI-only subset of apt.txt. No GUI apps, no snaps.
+
+# Core CLI
+git
+gh
+fzf
+ripgrep
+fd-find
+bat
+jq
+zoxide
+neovim
+zsh
+curl
+ca-certificates
+gnupg
+lsb-release
+unzip
+
+# TUI apps + yazi optional extended tools
+lazygit
+yazi
+ffmpeg
+p7zip-full
+poppler-utils
+imagemagick
+
+# Build tools
+build-essential
+
+# Docker (engine + compose plugin) — runs natively inside WSL2
+docker.io
+docker-compose-plugin
+
+# LastPass CLI
+lastpass-cli
+
+# Cloud CLIs
+azure-cli
+azure-functions-core-tools-4

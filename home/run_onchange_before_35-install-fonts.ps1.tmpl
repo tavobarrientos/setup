@@ -1,0 +1,37 @@
+{{ if eq .chezmoi.os "windows" -}}
+# Windows: install MesloLGM Nerd Font for the current user.
+$fontDir = Join-Path $env:LOCALAPPDATA 'Microsoft\Windows\Fonts'
+$markerFont = Join-Path $fontDir 'MesloLGMNerdFont-Regular.ttf'
+
+if (Test-Path $markerFont) {
+  Write-Host "MesloLGM Nerd Font already installed"
+  exit 0
+}
+
+# Prefer oh-my-posh font installer if available
+if (Get-Command oh-my-posh -ErrorAction SilentlyContinue) {
+  Write-Host "==> Installing Meslo via oh-my-posh font installer" -ForegroundColor Cyan
+  oh-my-posh font install Meslo --user
+  exit 0
+}
+
+Write-Host "==> Downloading Meslo Nerd Font release" -ForegroundColor Cyan
+$tmp = Join-Path $env:TEMP "meslo-nf"
+New-Item -ItemType Directory -Force -Path $tmp | Out-Null
+$zip = Join-Path $tmp 'Meslo.zip'
+Invoke-WebRequest -UseBasicParsing -OutFile $zip `
+  -Uri 'https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Meslo.zip'
+Expand-Archive -Force $zip -DestinationPath $tmp
+
+New-Item -ItemType Directory -Force -Path $fontDir | Out-Null
+Get-ChildItem -Path $tmp -Filter 'MesloLGM*NerdFont*.ttf' -Recurse | ForEach-Object {
+  $dest = Join-Path $fontDir $_.Name
+  Copy-Item -Force $_.FullName $dest
+  # Register per-user in the registry
+  $regName = "$($_.BaseName) (TrueType)"
+  Set-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Fonts' `
+    -Name $regName -Value $dest -Type String -Force
+}
+Remove-Item -Recurse -Force $tmp
+Write-Host "Meslo Nerd Font installed (you may need to restart your terminal)."
+{{- end }}

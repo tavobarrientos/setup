@@ -1,0 +1,10 @@
+{{ if eq .chezmoi.os "windows" -}}
+# winget.json hash: {{ include "../packages/winget.json" | sha256sum }}
+
+$ErrorActionPreference = 'Continue'
+$repoRoot = (Split-Path -Parent $env:CHEZMOI_SOURCE_DIR)
+$winget   = Join-Path $repoRoot 'packages\winget.json'
+
+Write-Host "==> winget import $winget" -ForegroundColor Cyan
+winget import --import-file $winget --accept-package-agreements --accept-source-agreements --disable-interactivity
+{{- end }}

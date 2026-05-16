@@ -1,0 +1,13 @@
+# ~/.bashrc — minimal fallback. Primary shell is zsh + Oh My Zsh.
+# Kept for non-interactive scripts, sudo shells, and emergency use.
+
+case $- in *i*) ;; *) return ;; esac
+
+export PATH="$HOME/.local/bin:$PATH"
+
+command -v fnm    >/dev/null 2>&1 && eval "$(fnm env --use-on-cd --shell bash)"
+command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init bash)"
+
+[ -f "$HOME/.config/shell/aliases.sh" ] && source "$HOME/.config/shell/aliases.sh"
+
+PS1='\u@\h \w \$ '
