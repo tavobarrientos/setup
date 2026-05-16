@@ -36,8 +36,21 @@ echo "deb [arch=$ARCH signed-by=$KEYRING_DIR/microsoft.gpg] https://packages.mic
 echo "deb [arch=$ARCH signed-by=$KEYRING_DIR/microsoft.gpg] https://packages.microsoft.com/repos/ms-teams stable main" \
   | sudo tee "$SOURCES_DIR/teams.list" >/dev/null
 
-# Azure CLI
-echo "deb [arch=$ARCH signed-by=$KEYRING_DIR/microsoft.gpg] https://packages.microsoft.com/repos/azure-cli/ $CODENAME main" \
+# Azure CLI — Microsoft publishes this feed only for specific (mostly LTS)
+# Ubuntu codenames; brand-new releases 404 on dists/<codename>/Release. The
+# azure-cli package is distribution-agnostic, so probe the live codename and
+# fall back to the newest known-good dist if Microsoft hasn't published it yet.
+AZ_CLI_DIST="$CODENAME"
+if ! curl -fsI "https://packages.microsoft.com/repos/azure-cli/dists/$AZ_CLI_DIST/Release" >/dev/null 2>&1; then
+  for fallback in noble jammy focal; do
+    if curl -fsI "https://packages.microsoft.com/repos/azure-cli/dists/$fallback/Release" >/dev/null 2>&1; then
+      echo "azure-cli: Microsoft has no '$CODENAME' feed; falling back to '$fallback'"
+      AZ_CLI_DIST="$fallback"
+      break
+    fi
+  done
+fi
+echo "deb [arch=$ARCH signed-by=$KEYRING_DIR/microsoft.gpg] https://packages.microsoft.com/repos/azure-cli/ $AZ_CLI_DIST main" \
   | sudo tee "$SOURCES_DIR/azure-cli.list" >/dev/null
 
 # .NET / prod feed (covers dotnet-sdk-10.0 and azure-functions-core-tools-4)
