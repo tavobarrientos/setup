@@ -123,8 +123,8 @@ function Main {
   Ensure-ExecutionPolicy    # MUST run before chezmoi spawns any .ps1 (OMP setup, modules).
   Ensure-Chezmoi
   Set-YaziFileOne
-  Ensure-WSL
   Invoke-Chezmoi
+  Ensure-WSL                # last: wsl --install needs a reboot to finish
   Write-Step "Windows host bootstrap complete."
   Write-Host @"
 
