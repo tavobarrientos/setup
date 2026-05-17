@@ -96,8 +96,6 @@ Post-bootstrap manual steps:
   2. lpass login <email>   # LastPass CLI (Linux/WSL only)
   3. Sign into LastPass browser extension and Microsoft 365.
   4. (macOS) Sign into the App Store so the Xcode IDE install completes.
-  5. (Windows-side) Swap the PowerShell profile + Oh My Posh theme placeholders
-     for your real copies from OneDrive.
 POST
 }
 

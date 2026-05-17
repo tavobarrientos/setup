@@ -70,7 +70,7 @@ OpenCode, OpenSpec.
 | Spotify | ✓ | ✓ | ✓ | — |
 | Notion | ✓ | ✓ | ✓ | — |
 | LastPass app | ✓ | `lastpass-cli` + ext | ✓ | `lastpass-cli` |
-| Ghostty | ✓ | ✓ | — | — |
+| Ghostty | ✓ | — | — | — |
 | PowerToys | — | — | ✓ | — |
 | Visual Studio 2026 Community | — | — | ✓ | — |
 | Postman | ✓ | ✓ | ✓ | — |
@@ -94,8 +94,8 @@ setup/
 │   ├── dot_zshrc.tmpl      # → ~/.zshrc
 │   ├── dot_bashrc          # → ~/.bashrc (fallback)
 │   ├── dot_config/         # → ~/.config/...
-│   ├── Documents/PowerShell/  # PowerShell profile + OMP theme (placeholders)
-│   └── run_onchange_before_*  # OS-templated install scripts
+│   └── run_onchange_before_*  # OS-templated install scripts (one installs the
+│                              # pwsh profile from packages/powershell/)
 └── packages/               # package manifests, one per OS
 ```
 

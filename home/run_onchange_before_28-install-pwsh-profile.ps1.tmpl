@@ -1,0 +1,23 @@
+{{ if eq .chezmoi.os "windows" -}}
+# profile hash: {{ include "../packages/powershell/Microsoft.PowerShell_profile.ps1" | sha256sum }}
+# theme hash:   {{ include "../packages/powershell/omp-theme.omp.json" | sha256sum }}
+
+$ErrorActionPreference = 'Continue'
+$repoRoot = (Split-Path -Parent $env:CHEZMOI_SOURCE_DIR)
+$src      = Join-Path $repoRoot 'packages\powershell'
+
+# CurrentUserCurrentHost = the OneDrive-aware path pwsh actually loads.
+$profilePath = $PROFILE.CurrentUserCurrentHost
+$profileDir  = Split-Path -Parent $profilePath
+
+try {
+  if (-not (Test-Path $profileDir)) {
+    New-Item -ItemType Directory -Path $profileDir -Force | Out-Null
+  }
+  Write-Host "==> Installing PowerShell profile + OMP theme to $profileDir" -ForegroundColor Cyan
+  Copy-Item (Join-Path $src 'Microsoft.PowerShell_profile.ps1') $profilePath -Force -ErrorAction Stop
+  Copy-Item (Join-Path $src 'omp-theme.omp.json') (Join-Path $profileDir 'omp-theme.omp.json') -Force -ErrorAction Stop
+} catch {
+  Write-Warning "PowerShell profile install failed: $($_.Exception.Message)"
+}
+{{- end }}

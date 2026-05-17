@@ -1,9 +1,6 @@
 # Brewfile — macOS package manifest.
 # Apply with: brew bundle --file=packages/Brewfile
 
-tap "homebrew/bundle"
-tap "homebrew/cask"
-tap "homebrew/cask-fonts"
 tap "azure/functions", "https://github.com/Azure/azure-functions-core-tools"
 tap "sst/tap"
 tap "romkatv/powerlevel10k"
