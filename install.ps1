@@ -33,7 +33,7 @@ function Ensure-GitForWindows {
     return
   }
   Write-Step "Installing Git for Windows"
-  winget install --id Git.Git -e --silent --accept-package-agreements --accept-source-agreements
+  winget install --id Git.Git -e -s winget --silent --accept-package-agreements --accept-source-agreements
 }
 
 function Ensure-PowerShell7 {
@@ -46,7 +46,7 @@ function Ensure-PowerShell7 {
     return
   }
   Write-Step "Installing PowerShell 7 (Microsoft.PowerShell)"
-  winget install --id Microsoft.PowerShell -e --silent `
+  winget install --id Microsoft.PowerShell -e -s winget --silent `
     --accept-package-agreements --accept-source-agreements
 
   # winget set the machine PATH but THIS process inherited PATH at launch,
@@ -84,7 +84,7 @@ function Ensure-Chezmoi {
     return
   }
   Write-Step "Installing chezmoi"
-  winget install --id twpayne.chezmoi -e --silent --accept-package-agreements --accept-source-agreements
+  winget install --id twpayne.chezmoi -e -s winget --silent --accept-package-agreements --accept-source-agreements
   # Make freshly-installed shims visible in this session
   $env:PATH = "$env:PATH;$env:LOCALAPPDATA\Microsoft\WinGet\Links"
 }
@@ -101,13 +101,14 @@ function Set-YaziFileOne {
 }
 
 function Ensure-WSL {
-  $wslStatus = wsl --status 2>$null
-  if ($LASTEXITCODE -eq 0 -and $wslStatus) {
+  $null = wsl --status 2>&1
+  if ($LASTEXITCODE -eq 0) {
     Write-Step "WSL already installed"
-  } else {
-    Write-Step "Installing WSL with Ubuntu (a reboot may be required)"
-    wsl --install -d Ubuntu --no-launch
+    return
   }
+  Write-Step "Installing WSL + Ubuntu (reboot required to finish)"
+  wsl --install --no-launch
+  Write-Warn "WSL install started. Reboot, open Ubuntu once to create your user, then run install.sh inside it."
 }
 
 function Invoke-Chezmoi {
