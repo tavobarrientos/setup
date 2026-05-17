@@ -1,3 +1,4 @@
+{{- if ne .chezmoi.os "windows" -}}
 #!/usr/bin/env bash
 # Hashes of package files so chezmoi re-runs this when they change:
 #   Brewfile:        {{ include "../packages/Brewfile" | sha256sum }}
@@ -5,10 +6,6 @@
 #   snap.txt:        {{ include "../packages/snap.txt" | sha256sum }}
 #   wsl-packages:    {{ include "../packages/wsl-packages.txt" | sha256sum }}
 #   deb-repos.sh:    {{ include "../packages/deb-repos.sh" | sha256sum }}
-
-{{- if eq .chezmoi.os "windows" }}
-exit 0
-{{- end }}
 
 set -euo pipefail
 REPO_DIR="${CHEZMOI_SOURCE_DIR%/home}"
@@ -99,3 +96,4 @@ done < "$PKG_DIR/snap.txt"
 {{ end }}
 
 log "Package install step complete."
+{{- end -}}

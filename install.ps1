@@ -101,13 +101,14 @@ function Set-YaziFileOne {
 }
 
 function Ensure-WSL {
-  $null = wsl --status 2>&1
+  $ErrorActionPreference = 'SilentlyContinue'
+  wsl.exe --status 2>$null | Out-Null
   if ($LASTEXITCODE -eq 0) {
     Write-Step "WSL already installed"
     return
   }
   Write-Step "Installing WSL + Ubuntu (reboot required to finish)"
-  wsl --install --no-launch
+  wsl.exe --install --no-launch 2>$null
   Write-Warn "WSL install started. Reboot, open Ubuntu once to create your user, then run install.sh inside it."
 }
 

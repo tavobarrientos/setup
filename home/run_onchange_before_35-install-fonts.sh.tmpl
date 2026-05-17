@@ -1,7 +1,5 @@
+{{- if ne .chezmoi.os "windows" -}}
 #!/usr/bin/env bash
-{{- if eq .chezmoi.os "windows" }}
-exit 0
-{{- end }}
 {{- if .is_wsl }}
 # WSL renders fonts via the Windows host.
 exit 0
@@ -34,3 +32,4 @@ cp "$TMP/extracted/"MesloLGM*NerdFont*.ttf "$FONT_DIR/" 2>/dev/null || \
   cp "$TMP/extracted/"*.ttf "$FONT_DIR/"
 fc-cache -f "$FONT_DIR"
 log "Meslo Nerd Font installed"
+{{- end -}}

@@ -1,9 +1,6 @@
+{{- if ne .chezmoi.os "windows" -}}
 #!/usr/bin/env bash
 # extension list hash: {{ include "../packages/vscode-extensions.txt.tmpl" | sha256sum }}
-
-{{- if eq .chezmoi.os "windows" }}
-exit 0
-{{- end }}
 {{- if .is_wsl }}
 # Inside WSL, VS Code is provided by the Windows host via Remote-WSL.
 # Extensions installed there cover both environments.
@@ -27,3 +24,4 @@ echo "$RENDERED" | while IFS= read -r line; do
   echo "==> code --install-extension $line"
   code --install-extension "$line" --force || true
 done
+{{- end -}}
