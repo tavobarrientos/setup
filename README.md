@@ -65,7 +65,7 @@ OpenCode, OpenSpec.
 | Docker Engine + compose | — | ✓ | — | ✓ |
 | Microsoft Edge | ✓ | ✓ | preinstalled | — |
 | Microsoft Teams | ✓ | ✓ | ✓ | — |
-| Microsoft 365 (Office) | ✓ | OpenOffice instead | ✓ | — |
+| Microsoft 365 (Office) | ✓ | LibreOffice instead | ✓ | — |
 | Slack | ✓ | ✓ | ✓ | — |
 | Spotify | ✓ | ✓ | ✓ | — |
 | Notion | ✓ | ✓ | ✓ | — |
