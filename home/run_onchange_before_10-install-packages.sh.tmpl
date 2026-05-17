@@ -16,6 +16,22 @@ PKG_DIR="$REPO_DIR/packages"
 
 log() { printf '\033[1;34m==>\033[0m %s\n' "$*"; }
 
+# Install apt packages from a manifest, skipping names apt can't resolve —
+# one unknown package otherwise aborts the entire batch.
+apt_install_file() {
+  local f="$1" avail=() missing=() p
+  while IFS= read -r p; do
+    p="${p%%#*}"; p="$(echo "$p" | xargs)"
+    [ -z "$p" ] && continue
+    if apt-cache show "$p" >/dev/null 2>&1; then avail+=("$p"); else missing+=("$p"); fi
+  done < "$f"
+  [ "${#missing[@]}" -eq 0 ] || log "Not in apt, skipped: ${missing[*]}"
+  if [ "${#avail[@]}" -gt 0 ]; then
+    sudo apt-get install -y --no-install-recommends "${avail[@]}" \
+      || log "apt-get reported errors; review output above."
+  fi
+}
+
 {{ if eq .chezmoi.os "darwin" -}}
 log "macOS: brew bundle"
 brew update
@@ -27,9 +43,7 @@ brew bundle --file="$PKG_DIR/Brewfile" || {
   {{ if .is_wsl -}}
 log "WSL: installing CLI-only apt package set"
 sudo apt-get update -y
-grep -v '^\s*#' "$PKG_DIR/wsl-packages.txt" | grep -v '^\s*$' \
-  | xargs sudo apt-get install -y --no-install-recommends \
-  || log "Some WSL packages failed to install; check apt output above."
+apt_install_file "$PKG_DIR/wsl-packages.txt"
 
 # Add Microsoft + GitHub apt repos (no GUI repos in WSL)
 if ! [ -f /etc/apt/keyrings/microsoft.gpg ]; then
@@ -71,10 +85,7 @@ log "Ubuntu: adding third-party apt repos"
 bash "$PKG_DIR/deb-repos.sh"
 
 log "Ubuntu: apt install from apt.txt"
-# Filter out comments and blank lines, install in one shot
-grep -v '^\s*#' "$PKG_DIR/apt.txt" | grep -v '^\s*$' \
-  | xargs sudo apt-get install -y --no-install-recommends \
-  || log "Some apt packages failed; review the output above."
+apt_install_file "$PKG_DIR/apt.txt"
 
 log "Ubuntu: snap installs"
 while IFS= read -r line; do

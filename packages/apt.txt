@@ -29,22 +29,19 @@ imagemagick
 # Languages / runtimes prereqs
 build-essential
 
-# Docker
+# Docker (compose-plugin is Docker's repo only; Ubuntu ships docker-compose-v2)
 docker.io
-docker-compose-plugin
+docker-compose-v2
 
 # LastPass CLI
 lastpass-cli
 
-# Cloud / agent CLIs (Azure CLI is added via deb-repos.sh script)
+# Cloud / agent CLIs
 azure-cli
-azure-functions-core-tools-4
 
 # GUI dev apps (require MS / VSCode / etc. repos from deb-repos.sh)
 code
 microsoft-edge-stable
-teams
-ghostty
 
-# Office
-openoffice.org
+# Libre Office
+libreoffice

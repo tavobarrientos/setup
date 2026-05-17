@@ -68,10 +68,6 @@ fi
 echo "deb [arch=$ARCH signed-by=$KEYRING_DIR/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
   | sudo tee "$SOURCES_DIR/github-cli.list" >/dev/null
 
-# --- Ghostty (community PPA — fall back to GitHub release tarball if PPA missing) ---
-if ! grep -rq "ghostty" "$SOURCES_DIR" 2>/dev/null; then
-  sudo add-apt-repository -y ppa:ppa-verse/ghostty 2>/dev/null || \
-    echo "Ghostty PPA not available — install manually from https://ghostty.org/download"
-fi
+# --- Ghostty: no working apt repo/PPA; not installed here.
 
 sudo apt-get update -y

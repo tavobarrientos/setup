@@ -28,6 +28,21 @@ else
   log ".NET 10 SDK already installed"
 fi
 
+{{ if ne .chezmoi.os "darwin" -}}
+# fnm + uv aren't in apt; install into ~/.local/bin (already on PATH via
+# dot_zshrc/dot_bashrc). macOS gets them from the Brewfile.
+if ! command -v fnm >/dev/null 2>&1; then
+  log "Installing fnm"
+  curl -fsSL https://fnm.vercel.app/install | bash -s -- --install-dir "$HOME/.local/bin" --skip-shell
+  export PATH="$HOME/.local/bin:$PATH"
+fi
+if ! command -v uv >/dev/null 2>&1; then
+  log "Installing uv"
+  curl -LsSf https://astral.sh/uv/install.sh | sh
+  export PATH="$HOME/.local/bin:$PATH"
+fi
+{{ end -}}
+
 # --- Node via fnm ----------------------------------------------------------
 if command -v fnm >/dev/null 2>&1; then
   log "Installing latest Node LTS via fnm"
@@ -76,5 +91,49 @@ if ! command -v opencode >/dev/null 2>&1; then
   curl -fsSL https://opencode.ai/install | bash || log "OpenCode install failed."
 fi
 {{ end -}}
+
+{{ if ne .chezmoi.os "darwin" -}}
+# Azure Functions Core Tools v4 — not reliably in the MS apt feed for new
+# Ubuntu releases; npm is codename-independent.
+if ! command -v func >/dev/null 2>&1 && command -v npm >/dev/null 2>&1; then
+  log "Installing Azure Functions Core Tools v4 via npm"
+  npm install -g azure-functions-core-tools@4 --unsafe-perm true || log "Func Core Tools install failed."
+fi
+
+# yazi + lazygit: no apt package on Ubuntu — fetch prebuilt release binaries.
+case "$(uname -m)" in
+  x86_64)  yt=x86_64-unknown-linux-gnu;  lg=Linux_x86_64 ;;
+  aarch64) yt=aarch64-unknown-linux-gnu; lg=Linux_arm64  ;;
+  *)       yt=""; lg="" ;;
+esac
+if [ -n "$lg" ] && ! command -v lazygit >/dev/null 2>&1; then
+  log "Installing lazygit"
+  v=$(curl -fsSL https://api.github.com/repos/jesseduffield/lazygit/releases/latest | grep -Po '"tag_name": *"v\K[^"]*') || v=""
+  if [ -n "$v" ] && curl -fsSL "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${v}_${lg}.tar.gz" -o /tmp/lazygit.tgz; then
+    tar -xzf /tmp/lazygit.tgz -C /tmp lazygit && sudo install -m755 /tmp/lazygit /usr/local/bin/lazygit || log "lazygit install failed."
+  else
+    log "lazygit download failed."
+  fi
+fi
+if [ -n "$yt" ] && ! command -v yazi >/dev/null 2>&1; then
+  log "Installing yazi"
+  if curl -fsSL "https://github.com/sxyazi/yazi/releases/latest/download/yazi-${yt}.zip" -o /tmp/yazi.zip; then
+    unzip -oq /tmp/yazi.zip -d /tmp \
+      && sudo install -m755 "/tmp/yazi-${yt}/yazi" /usr/local/bin/yazi \
+      && sudo install -m755 "/tmp/yazi-${yt}/ya"   /usr/local/bin/ya \
+      || log "yazi install failed."
+  else
+    log "yazi download failed."
+  fi
+fi
+{{ end -}}
+
+# fzf via official installer into ~/.fzf (OMZ fzf plugin auto-detects it).
+if [ ! -d "$HOME/.fzf" ]; then
+  log "Installing fzf (~/.fzf)"
+  git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME/.fzf" \
+    && "$HOME/.fzf/install" --bin \
+    || log "fzf install failed."
+fi
 
 log "Runtime install step complete."
