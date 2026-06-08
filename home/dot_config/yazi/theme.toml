@@ -1,2 +1,11 @@
 # theme.toml — managed by chezmoi.
 # Docs: https://yazi-rs.github.io/docs/configuration/theme
+#
+# Flavors own the full theme INCLUDING syntax-highlighting (their bundled
+# tmtheme.xml), so previews get bat-style highlighting natively — no per-file
+# `bat` subprocess. Installed by run_onchange_before_40-install-yazi-plugins.
+# Swap the names below for any other installed flavor.
+
+[flavor]
+dark  = "catppuccin-mocha"
+light = "catppuccin-latte"

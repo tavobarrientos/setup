@@ -1,2 +1,38 @@
 # yazi.toml — managed by chezmoi.
 # Docs: https://yazi-rs.github.io/docs/configuration/yazi
+# Targets Yazi 26.x schema ([mgr], not [manager]).
+
+[mgr]
+ratio          = [1, 3, 4]
+sort_by        = "natural"
+sort_sensitive = false
+sort_reverse   = false
+sort_dir_first = true
+linemode       = "size"
+show_hidden    = false
+show_symlink   = true
+scrolloff      = 5
+
+[preview]
+wrap          = "no"
+tab_size      = 2
+max_width     = 1000
+max_height    = 1000
+image_filter  = "lanczos3"
+image_quality = 80
+
+# nvim is the editor for everything text-like.
+[opener]
+edit = [
+  { run = 'nvim "$@"', block = true, for = "unix" },
+]
+
+[open]
+# Override defaults so empty files and JSON open in the editor (nvim).
+prepend_rules = [
+  { mime = "inode/x-empty",    use = "edit" },
+  { mime = "application/json", use = "edit" },
+]
+
+# git.yazi shows per-file VCS status. On Yazi > 26.1.22 the plugin registers
+# its own fetchers, so no [plugin].prepend_fetchers block is needed here.

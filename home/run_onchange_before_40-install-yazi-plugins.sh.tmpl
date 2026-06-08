@@ -1,0 +1,42 @@
+{{- if ne .chezmoi.os "windows" -}}
+#!/usr/bin/env bash
+# Installs Yazi plugins & flavors via `ya pkg`. Re-runs when this script or the
+# yazi config changes:
+#   yazi.toml:   {{ include "dot_config/yazi/yazi.toml" | sha256sum }}
+#   keymap.toml: {{ include "dot_config/yazi/keymap.toml" | sha256sum }}
+#   theme.toml:  {{ include "dot_config/yazi/theme.toml" | sha256sum }}
+
+set -euo pipefail
+log() { printf '\033[1;34m==>\033[0m %s\n' "$*"; }
+
+# Needs the `ya` CLI (ships with yazi, installed in run_onchange_before_10).
+if ! command -v ya >/dev/null 2>&1; then
+  log "ya (yazi CLI) not found; skipping yazi plugin install."
+  exit 0
+fi
+
+YAZI_CFG="${XDG_CONFIG_HOME:-$HOME/.config}/yazi"
+
+# add_pkg <spec> <kind:plugins|flavors> <local-name>
+# Idempotent: skip if the package dir already exists.
+add_pkg() {
+  local spec="$1" kind="$2" name="$3"
+  if [ -d "$YAZI_CFG/$kind/$name.yazi" ]; then
+    log "yazi $kind already present: $name"
+  else
+    log "Installing yazi $kind: $spec"
+    ya pkg add "$spec" || log "Failed to add $spec (continuing)."
+  fi
+}
+
+# Plugins
+add_pkg "yazi-rs/plugins:git"          plugins git
+add_pkg "yazi-rs/plugins:smart-enter"  plugins smart-enter
+add_pkg "yazi-rs/plugins:full-border"  plugins full-border
+
+# Flavors (provide theming + bat-style syntax highlighting for previews)
+add_pkg "yazi-rs/flavors:catppuccin-mocha" flavors catppuccin-mocha
+add_pkg "yazi-rs/flavors:catppuccin-latte" flavors catppuccin-latte
+
+log "Yazi plugin/flavor install complete."
+{{- end -}}

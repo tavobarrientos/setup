@@ -1,7 +1,6 @@
 # Brewfile — macOS package manifest.
 # Apply with: brew bundle --file=packages/Brewfile
 
-tap "azure/functions", "https://github.com/Azure/azure-functions-core-tools"
 tap "sst/tap"
 tap "romkatv/powerlevel10k"
 
@@ -36,9 +35,7 @@ brew "imagemagick"
 
 # Cloud / agent CLIs
 brew "azure-cli"
-brew "azure/functions/azure-functions-core-tools@4"
-brew "github/copilot/copilot"
-brew "sst/tap/opencode"
+brew "opencode"
 
 # GUI dev apps
 cask "visual-studio-code"
@@ -49,6 +46,7 @@ cask "ghostty"
 cask "postman"
 cask "rider"
 cask "neo4j-desktop"
+cask "copilot-cli"
 
 # Productivity
 cask "microsoft-edge"

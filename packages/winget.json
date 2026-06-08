@@ -24,6 +24,7 @@
         { "PackageIdentifier": "SlackTechnologies.Slack" },
         { "PackageIdentifier": "Spotify.Spotify" },
         { "PackageIdentifier": "Notion.Notion" },
+        { "PackageIdentifier": "Valve.Steam" },
         { "PackageIdentifier": "LogMeIn.LastPass" },
 
         { "PackageIdentifier": "Microsoft.DotNet.SDK.10" },
