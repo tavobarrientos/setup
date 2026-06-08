@@ -1,9 +1,80 @@
 # Ghostty config — managed by chezmoi.
-font-family       = "MesloLGM Nerd Font"
-font-size         = 13
-theme             = "TokyoNight"
-window-decoration = false
-window-padding-x  = 12
-window-padding-y  = 12
-cursor-style      = block
+
+# Core
+font-family = "MesloLGM Nerd Font"
+font-size = 13
+theme = "TokyoNight"
 shell-integration = detect
+shell-integration-features = cursor,sudo,title,ssh-env,ssh-terminfo
+macos-icon = glass
+
+# Window look
+window-decoration = true
+macos-titlebar-style = transparent
+macos-window-shadow = true
+window-padding-x = 16
+window-padding-y = 14
+window-padding-balance = true
+window-padding-color = extend
+window-colorspace = display-p3
+alpha-blending = linear-corrected
+window-width = 140
+window-height = 38
+
+# Glass effect
+background-opacity = 0.76
+background-opacity-cells = true
+background-blur = true
+
+# Cursor and readability
+cursor-style = block
+cursor-style-blink = false
+cursor-color = "#7aa2f7"
+cursor-text = "#1a1b26"
+cursor-opacity = 0.92
+minimum-contrast = 1.25
+scrollback-limit = 100000000
+mouse-hide-while-typing = true
+
+# Font polish
+font-thicken = true
+font-feature = -calt,-liga,-dlig
+
+# Selection and search styling
+selection-background = "#33467c"
+selection-foreground = "#c0caf5"
+search-background = "#e0af68"
+search-foreground = "#1a1b26"
+search-selected-background = "#7aa2f7"
+search-selected-foreground = "#1a1b26"
+
+# Split aesthetics
+unfocused-split-opacity = 0.90
+unfocused-split-fill = "#16161e"
+split-divider-color = "#414868"
+split-preserve-zoom = navigation
+
+# Clipboard safety
+clipboard-read = ask
+clipboard-write = allow
+clipboard-paste-protection = true
+clipboard-trim-trailing-spaces = true
+
+# Workflow continuity
+window-inherit-working-directory = true
+tab-inherit-working-directory = true
+split-inherit-working-directory = true
+window-inherit-font-size = true
+window-save-state = always
+cursor-click-to-move = true
+link-previews = true
+
+# macOS keyboard/security
+macos-option-as-alt = left
+macos-auto-secure-input = true
+macos-secure-input-indication = true
+
+# Long-running command notifications
+notify-on-command-finish = unfocused
+notify-on-command-finish-action = bell,notify
+notify-on-command-finish-after = 10s

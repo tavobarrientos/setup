@@ -76,7 +76,7 @@ OpenCode, OpenSpec.
 | Postman | ✓ | ✓ | ✓ | — |
 | JetBrains Rider | ✓ | — | — | — |
 | Xcode + CLT | ✓ | — | — | — |
-
+| Neo4j Desktop | ✓ | — | ✓ | — |
 ### VS Code extensions
 
 See [`packages/vscode-extensions.txt.tmpl`](packages/vscode-extensions.txt.tmpl).

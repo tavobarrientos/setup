@@ -29,6 +29,7 @@
         { "PackageIdentifier": "Microsoft.DotNet.SDK.10" },
         { "PackageIdentifier": "Schniz.fnm" },
         { "PackageIdentifier": "astral-sh.uv" },
+        { "PackageIdentifier": "Neo4j.Neo4jDesktop" },
 
         { "PackageIdentifier": "Microsoft.AzureCLI" },
         { "PackageIdentifier": "Microsoft.Azure.FunctionsCoreTools" },

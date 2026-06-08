@@ -48,6 +48,7 @@ cask "docker-desktop"
 cask "ghostty"
 cask "postman"
 cask "rider"
+cask "neo4j-desktop"
 
 # Productivity
 cask "microsoft-edge"

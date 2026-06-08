@@ -11,17 +11,50 @@ set -euo pipefail
 REPO_DIR="${CHEZMOI_SOURCE_DIR%/home}"
 EXT_FILE="$REPO_DIR/packages/vscode-extensions.txt.tmpl"
 
+# Resolve the `code` CLI even when the PATH symlink isn't set up yet — right
+# after a fresh install the binary already exists in the app bundle, before the
+# shell's PATH (or Homebrew's symlink) knows about it.
 if ! command -v code >/dev/null 2>&1; then
-  echo "code CLI not found on PATH; skipping VS Code extensions."
-  exit 0
+  for dir in \
+    "/Applications/Visual Studio Code.app/Contents/Resources/app/bin" \
+    "$HOME/Applications/Visual Studio Code.app/Contents/Resources/app/bin" \
+    "/usr/share/code/bin" \
+    "/snap/bin"; do
+    [ -x "$dir/code" ] && { PATH="$dir:$PATH"; break; }
+  done
+fi
+
+# If still missing, VS Code itself isn't installed yet. Exit non-zero so chezmoi
+# does NOT record this run_onchange as done — it retries on the next apply once
+# the package step has installed VS Code, instead of silently skipping forever.
+if ! command -v code >/dev/null 2>&1; then
+  echo "code CLI not found (VS Code not installed yet); will retry on next apply." >&2
+  exit 1
 fi
 
 # Re-render via chezmoi (paths inside the tmpl already account for OS gating)
 RENDERED=$(chezmoi execute-template < "$EXT_FILE")
 
+# Snapshot already-installed extensions (lowercased) so we skip ones VS Code
+# ships built-in (e.g. github.copilot[-chat]); --force can't "downgrade" those.
+INSTALLED=$(code --list-extensions 2>/dev/null | tr '[:upper:]' '[:lower:]')
+
 echo "$RENDERED" | while IFS= read -r line; do
   case "$line" in ''|\#*) continue ;; esac
-  echo "==> code --install-extension $line"
-  code --install-extension "$line" --force || true
+  if printf '%s\n' "$INSTALLED" | grep -qxF "$(printf '%s' "$line" | tr '[:upper:]' '[:lower:]')"; then
+    echo "==> $line already installed; skipping"
+    continue
+  fi
+  # Built-in extensions (e.g. github.copilot[-chat]) aren't in --list-extensions
+  # and error on --force since they can't be "downgraded"; treat that as a skip.
+  out=$(code --install-extension "$line" --force 2>&1) || true
+  if printf '%s' "$out" | grep -qi 'built-in extension'; then
+    echo "==> $line ships built-in; skipping"
+  elif printf '%s' "$out" | grep -qi 'successfully installed\|already installed'; then
+    echo "==> $line installed"
+  else
+    echo "==> $line failed:"
+    printf '%s\n' "$out" | tail -2
+  fi
 done
 {{- end -}}

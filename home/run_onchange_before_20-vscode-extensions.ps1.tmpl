@@ -4,17 +4,50 @@
 $repoRoot = (Split-Path -Parent $env:CHEZMOI_SOURCE_DIR)
 $extFile  = Join-Path $repoRoot 'packages\vscode-extensions.txt.tmpl'
 
-$code = (Get-Command code -ErrorAction SilentlyContinue)
-if (-not $code) {
-  Write-Host "code CLI not found on PATH; skipping VS Code extensions."
-  exit 0
+# Resolve the `code` CLI even when the PATH entry isn't set up yet — right after
+# a fresh install the binary already exists under the install dir before this
+# shell's PATH knows about it.
+if (-not (Get-Command code -ErrorAction SilentlyContinue)) {
+  $candidates = @(
+    "$env:LOCALAPPDATA\Programs\Microsoft VS Code\bin",
+    "$env:ProgramFiles\Microsoft VS Code\bin",
+    "${env:ProgramFiles(x86)}\Microsoft VS Code\bin"
+  )
+  foreach ($dir in $candidates) {
+    if (Test-Path (Join-Path $dir 'code.cmd')) { $env:PATH = "$dir;$env:PATH"; break }
+  }
 }
+
+# If still missing, VS Code itself isn't installed yet. Exit non-zero so chezmoi
+# does NOT record this run_onchange as done — it retries on the next apply once
+# the package step has installed VS Code, instead of silently skipping forever.
+if (-not (Get-Command code -ErrorAction SilentlyContinue)) {
+  Write-Error "code CLI not found (VS Code not installed yet); will retry on next apply."
+  exit 1
+}
+
+# Snapshot already-installed extensions (lowercased) so we skip ones VS Code
+# ships built-in (e.g. github.copilot[-chat]); --force can't "downgrade" those.
+$installed = @(code --list-extensions 2>$null | ForEach-Object { $_.ToLower() })
 
 $rendered = chezmoi execute-template (Get-Content -Raw $extFile)
 $rendered -split "`r?`n" |
   Where-Object { $_ -and ($_ -notmatch '^\s*#') } |
   ForEach-Object {
-    Write-Host "==> code --install-extension $_"
-    code --install-extension $_ --force
+    if ($installed -contains $_.ToLower()) {
+      Write-Host "==> $_ already installed; skipping"
+    } else {
+      # Built-in extensions (e.g. github.copilot[-chat]) aren't in --list-extensions
+      # and error on --force since they can't be "downgraded"; treat that as a skip.
+      $out = (code --install-extension $_ --force 2>&1) -join "`n"
+      if ($out -match 'built-in extension') {
+        Write-Host "==> $_ ships built-in; skipping"
+      } elseif ($out -match 'successfully installed|already installed') {
+        Write-Host "==> $_ installed"
+      } else {
+        Write-Host "==> $_ failed:"
+        Write-Host (($out -split "`n") | Select-Object -Last 2)
+      }
+    }
   }
 {{- end }}
