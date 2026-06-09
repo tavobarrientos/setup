@@ -24,7 +24,6 @@
         { "PackageIdentifier": "SlackTechnologies.Slack" },
         { "PackageIdentifier": "Spotify.Spotify" },
         { "PackageIdentifier": "Notion.Notion" },
-        { "PackageIdentifier": "Valve.Steam" },
         { "PackageIdentifier": "LogMeIn.LastPass" },
 
         { "PackageIdentifier": "Microsoft.DotNet.SDK.10" },
@@ -36,6 +35,9 @@
         { "PackageIdentifier": "Microsoft.Azure.FunctionsCoreTools" },
         { "PackageIdentifier": "GitHub.CLI.Copilot" },
         { "PackageIdentifier": "sst-cli.opencode" },
+
+        { "PackageIdentifier": "WhatsApp.WhatsApp" },
+        { "PackageIdentifier": "Valve.Steam" },
 
         { "PackageIdentifier": "JesseDuffield.Lazygit" },
         { "PackageIdentifier": "sxyazi.yazi" },

@@ -57,6 +57,9 @@ cask "spotify"
 cask "notion"
 cask "lastpass"
 
+# Social
+cask "whatsapp"
+
 # Fonts
 cask "font-meslo-lg-nerd-font"
 
