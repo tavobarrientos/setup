@@ -13,6 +13,7 @@
         { "PackageIdentifier": "Anysphere.Cursor" },
         { "PackageIdentifier": "Anthropic.Claude" },
         { "PackageIdentifier": "Microsoft.VisualStudio.2026.Community" },
+        { "PackageIdentifier": "Google.AndroidStudio" },
         { "PackageIdentifier": "Microsoft.PowerToys" },
 
         { "PackageIdentifier": "Docker.DockerDesktop" },
@@ -35,6 +36,9 @@
         { "PackageIdentifier": "Microsoft.Azure.FunctionsCoreTools" },
         { "PackageIdentifier": "GitHub.CLI.Copilot" },
         { "PackageIdentifier": "sst-cli.opencode" },
+
+        { "PackageIdentifier": "Ollama.Ollama" },
+        { "PackageIdentifier": "ElementLabs.LMStudio" },
 
         { "PackageIdentifier": "WhatsApp.WhatsApp" },
         { "PackageIdentifier": "Valve.Steam" },

@@ -6,3 +6,4 @@ slack            --classic   # !wsl
 spotify                      # !wsl
 postman                      # !wsl
 notion-snap-reloaded         # !wsl
+android-studio   --classic   # !wsl

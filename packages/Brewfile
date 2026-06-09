@@ -37,6 +37,10 @@ brew "imagemagick"
 brew "azure-cli"
 brew "opencode"
 
+# AI / local LLM (Ollama = desktop app + bundled CLI; LM Studio = GUI app)
+cask "ollama-app"       # menubar app + `ollama` CLI on PATH
+cask "lm-studio"
+
 # GUI dev apps
 cask "visual-studio-code"
 cask "cursor"
@@ -45,6 +49,7 @@ cask "docker-desktop"
 cask "ghostty"
 cask "postman"
 cask "rider"
+cask "android-studio"   # first-run wizard installs the Android SDK; add NDK via SDK Manager
 cask "neo4j-desktop"
 cask "copilot-cli"
 

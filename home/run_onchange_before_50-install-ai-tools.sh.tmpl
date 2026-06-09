@@ -1,0 +1,17 @@
+{{- if and (eq .chezmoi.os "linux") (not .is_wsl) -}}
+#!/usr/bin/env bash
+# Ubuntu desktop only: Ollama has no apt/snap package, so use the official
+# install script. macOS/Windows get Ollama from Brew/winget instead, and WSL is
+# intentionally excluded. LM Studio is not automated on Linux (AppImage-only).
+
+set -euo pipefail
+log() { printf '\033[1;34m==>\033[0m %s\n' "$*"; }
+
+if command -v ollama >/dev/null 2>&1; then
+  log "Ollama already installed: $(ollama --version 2>/dev/null | head -1)"
+else
+  log "Installing Ollama (official install.sh; sets up the systemd service)"
+  curl -fsSL https://ollama.com/install.sh | sh \
+    || log "Ollama install failed; run 'curl -fsSL https://ollama.com/install.sh | sh' manually."
+fi
+{{- end -}}

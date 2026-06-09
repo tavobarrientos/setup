@@ -49,6 +49,15 @@ skipped on Windows.
 Azure CLI, Azure Functions Core Tools v4, GitHub Copilot CLI, Claude Code,
 OpenCode, OpenSpec.
 
+### AI / local LLM
+- **Ollama** — local LLM runtime. macOS (Brew cask `ollama-app`) and Windows
+  (winget) install the desktop app, which also puts the `ollama` CLI on your
+  PATH. Ubuntu uses the official `install.sh` (CLI + server, sets up the systemd
+  service). Not configured in WSL.
+- **LM Studio** — desktop GUI for local LLMs. macOS (Brew cask) and Windows
+  (winget). On Linux it ships only as an AppImage — download it manually from
+  [lmstudio.ai](https://lmstudio.ai/); the bootstrap does not automate it.
+
 ### Languages
 - **.NET 10 SDK** (winget / Brew / apt)
 - **Node.js** via `fnm` (LTS)
@@ -75,8 +84,12 @@ OpenCode, OpenSpec.
 | Visual Studio 2026 Community | — | — | ✓ | — |
 | Postman | ✓ | ✓ | ✓ | — |
 | JetBrains Rider | ✓ | — | — | — |
+| Android Studio | ✓ | ✓ | ✓ | — |
 | Xcode + CLT | ✓ | — | — | — |
 | Neo4j Desktop | ✓ | — | ✓ | — |
+| Ollama | ✓ | ✓ | ✓ | — |
+| LM Studio | ✓ | — | ✓ | — |
+
 ### VS Code extensions
 
 See [`packages/vscode-extensions.txt.tmpl`](packages/vscode-extensions.txt.tmpl).
