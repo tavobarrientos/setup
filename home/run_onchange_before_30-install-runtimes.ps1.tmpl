@@ -28,4 +28,9 @@ if (-not (Test-Command claude)) {
   Write-Host "==> Installing Claude Code CLI" -ForegroundColor Cyan
   irm https://claude.ai/install.ps1 | iex
 }
+
+if (-not (Test-Command herdr)) {
+  Write-Host "==> Installing Herdr" -ForegroundColor Cyan
+  irm https://herdr.dev/install.ps1 | iex
+}
 {{- end }}

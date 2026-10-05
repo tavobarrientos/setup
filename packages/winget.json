@@ -35,10 +35,13 @@
         { "PackageIdentifier": "Microsoft.AzureCLI" },
         { "PackageIdentifier": "Microsoft.Azure.FunctionsCoreTools" },
         { "PackageIdentifier": "GitHub.CLI.Copilot" },
-        { "PackageIdentifier": "sst-cli.opencode" },
+        { "PackageIdentifier": "SST.opencode" },
+        { "PackageIdentifier": "OpenAI.Codex" },
+        { "PackageIdentifier": "StablyAI.Orca" },
 
         { "PackageIdentifier": "Ollama.Ollama" },
         { "PackageIdentifier": "ElementLabs.LMStudio" },
+        { "PackageIdentifier": "xAI.GrokBot" },
 
         { "PackageIdentifier": "WhatsApp.WhatsApp" },
         { "PackageIdentifier": "Valve.Steam" },

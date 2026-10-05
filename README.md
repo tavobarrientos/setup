@@ -47,7 +47,7 @@ skipped on Windows.
 
 ### Cloud / agent CLIs
 Azure CLI, Azure Functions Core Tools v4, GitHub Copilot CLI, Claude Code,
-OpenCode, OpenSpec.
+Codex CLI, OpenCode, OpenSpec, Herdr.
 
 ### AI / local LLM
 - **Ollama** — local LLM runtime. macOS (Brew cask `ollama-app`) and Windows
@@ -89,6 +89,9 @@ OpenCode, OpenSpec.
 | Neo4j Desktop | ✓ | — | ✓ | — |
 | Ollama | ✓ | ✓ | ✓ | — |
 | LM Studio | ✓ | — | ✓ | — |
+| Grok Bot | ✓ | — | ✓ | — |
+| Orca | ✓ | ✓ (AppImage) | ✓ | — |
+| Herdr | ✓ | ✓ | ✓ (beta) | ✓ |
 
 ### VS Code extensions
 

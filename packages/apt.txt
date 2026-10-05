@@ -46,3 +46,6 @@ microsoft-edge-stable
 
 # Libre Office
 libreoffice
+
+# AppImage runtime (Orca)
+libfuse2t64

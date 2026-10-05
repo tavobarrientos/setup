@@ -78,13 +78,36 @@ if ! command -v copilot >/dev/null 2>&1 && command -v npm >/dev/null 2>&1; then
   log "Installing GitHub Copilot CLI via npm"
   npm install -g @github/copilot || log "Copilot CLI install failed."
 fi
+
+# --- Codex CLI (Linux/WSL only — brew handles it on macOS) -----------------
+if ! command -v codex >/dev/null 2>&1 && command -v npm >/dev/null 2>&1; then
+  log "Installing Codex CLI via npm"
+  npm install -g @openai/codex || log "Codex CLI install failed."
+fi
 {{ end -}}
 
-# --- OpenCode (script installer on WSL since brew may not be ideal) -------
-{{ if .is_wsl -}}
+# --- OpenCode (Linux/WSL only — brew handles it on macOS) -----------------
+{{ if ne .chezmoi.os "darwin" -}}
 if ! command -v opencode >/dev/null 2>&1; then
   log "Installing OpenCode via official installer"
   curl -fsSL https://opencode.ai/install | bash || log "OpenCode install failed."
+fi
+
+# --- Herdr (Linux/WSL only — brew handles it on macOS) --------------------
+if ! command -v herdr >/dev/null 2>&1; then
+  log "Installing Herdr via official installer"
+  curl -fsSL https://herdr.dev/install.sh | sh || log "Herdr install failed."
+fi
+{{ end -}}
+
+{{ if and (eq .chezmoi.os "linux") (not .is_wsl) -}}
+# --- Orca (Ubuntu desktop only — AppImage into ~/.local/bin) ---------------
+if ! command -v orca >/dev/null 2>&1; then
+  log "Installing Orca (AppImage)"
+  mkdir -p "$HOME/.local/bin"
+  curl -fsSL https://github.com/stablyai/orca/releases/latest/download/orca-linux.AppImage -o "$HOME/.local/bin/orca" \
+    && chmod +x "$HOME/.local/bin/orca" \
+    || { rm -f "$HOME/.local/bin/orca"; log "Orca download failed."; }
 fi
 {{ end -}}
 

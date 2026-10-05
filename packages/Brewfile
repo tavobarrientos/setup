@@ -3,6 +3,7 @@
 
 tap "sst/tap"
 tap "romkatv/powerlevel10k"
+tap "stablyai/orca"
 
 # Core CLI
 brew "git"
@@ -36,10 +37,12 @@ brew "imagemagick"
 # Cloud / agent CLIs
 brew "azure-cli"
 brew "opencode"
+brew "herdr"
 
 # AI / local LLM (Ollama = desktop app + bundled CLI; LM Studio = GUI app)
 cask "ollama-app"       # menubar app + `ollama` CLI on PATH
 cask "lm-studio"
+cask "grok-bot"         # Apple Silicon only
 
 # GUI dev apps
 cask "visual-studio-code"
@@ -52,6 +55,8 @@ cask "rider"
 cask "android-studio"   # first-run wizard installs the Android SDK; add NDK via SDK Manager
 cask "neo4j-desktop"
 cask "copilot-cli"
+cask "codex"
+cask "stablyai/orca/orca"
 
 # Productivity
 cask "microsoft-edge"
