@@ -58,6 +58,13 @@ Codex CLI, OpenCode, OpenSpec, Herdr.
   (winget). On Linux it ships only as an AppImage — download it manually from
   [lmstudio.ai](https://lmstudio.ai/); the bootstrap does not automate it.
 
+### Remote desktop
+- **Windows App** — Microsoft's client for Windows 365, Azure Virtual Desktop,
+  Dev Box, and RDP. macOS (Brew cask `windows-app`) and Windows (winget
+  `Microsoft.WindowsApp`). There is no native Linux client — on Ubuntu use the
+  web client at [windows.cloud.microsoft](https://windows.cloud.microsoft) in
+  Edge, Chrome, or Firefox; the bootstrap does not automate it.
+
 ### Languages
 - **.NET 10 SDK** (winget / Brew / apt)
 - **Node.js** via `fnm` (LTS)
@@ -75,6 +82,7 @@ Codex CLI, OpenCode, OpenSpec, Herdr.
 | Microsoft Edge | ✓ | ✓ | preinstalled | — |
 | Microsoft Teams | ✓ | ✓ | ✓ | — |
 | Microsoft 365 (Office) | ✓ | LibreOffice instead | ✓ | — |
+| Windows App | ✓ | web client | ✓ | — |
 | Slack | ✓ | ✓ | ✓ | — |
 | Spotify | ✓ | ✓ | ✓ | — |
 | Notion | ✓ | ✓ | ✓ | — |

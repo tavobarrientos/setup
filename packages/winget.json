@@ -22,6 +22,7 @@
         { "PackageIdentifier": "Microsoft.Office" },
         { "PackageIdentifier": "Microsoft.Edge" },
         { "PackageIdentifier": "Microsoft.Teams" },
+        { "PackageIdentifier": "Microsoft.WindowsApp" },
         { "PackageIdentifier": "SlackTechnologies.Slack" },
         { "PackageIdentifier": "Spotify.Spotify" },
         { "PackageIdentifier": "Notion.Notion" },
